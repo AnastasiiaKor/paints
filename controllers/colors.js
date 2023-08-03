@@ -1,5 +1,5 @@
-const { Column } = require("../models/column");
-const { Task } = require("../models/task");
+const { Column } = require("../models/colors");
+const { Task } = require("../models/countries");
 const { HttpError, ctrlWrapper } = require("../helpers");
 
 const addColumn = async (req, res) => {

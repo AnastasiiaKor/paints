@@ -1,5 +1,5 @@
-const { Task } = require("../models/task");
-const { Column } = require("../models/column");
+const { Task } = require("../models/countries");
+const { Column } = require("../models/colors");
 const { HttpError, ctrlWrapper } = require("../helpers");
 
 const updateTask = async (req, res) => {

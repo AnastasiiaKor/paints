@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const adminRouter = require("./routes/api/admin");
+const countryRouter = require("./routes/api/countries");
 
 const app = express();
 
@@ -9,6 +10,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use("/admin", adminRouter);
+app.use("/countries", countryRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });

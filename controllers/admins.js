@@ -3,7 +3,6 @@ const { HttpError, ctrlWrapper } = require("../helpers");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = process.env;
-const cloudinary = require("cloudinary").v2;
 
 const register = async (req, res) => {
   const { email, password } = req.body;
@@ -85,22 +84,10 @@ const update = async (req, res) => {
   });
 };
 
-// const uploadAvatar = async (req, res) => {
-//   const locaFilePath = req.file.path;
-//   const result = await cloudinary.uploader.upload(locaFilePath, {
-//     folder: "avatar",
-//     resource_type: "image",
-//     public_id: req.file.originalname,
-//   });
-
-//   res.status(200).json({ url: result.secure_url });
-// };
-
 module.exports = {
   register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   check: ctrlWrapper(check),
   logout: ctrlWrapper(logout),
   update: ctrlWrapper(update),
-  // uploadAvatar: ctrlWrapper(uploadAvatar),
 };
