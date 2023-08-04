@@ -3,6 +3,7 @@ const express = require("express");
 const cors = require("cors");
 const adminRouter = require("./routes/api/admin");
 const countryRouter = require("./routes/api/countries");
+const galleryRouter = require("./routes/api/pictures");
 
 const app = express();
 
@@ -11,6 +12,7 @@ app.use(express.json());
 
 app.use("/admin", adminRouter);
 app.use("/countries", countryRouter);
+app.use("/gallery", galleryRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
