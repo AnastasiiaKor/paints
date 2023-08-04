@@ -11,7 +11,7 @@ const countrySchema = new Schema(
     },
     url: {
       type: String,
-      default: null,
+      required: [true, "Url is required"],
     },
     categories: [
       {
@@ -25,7 +25,6 @@ const countrySchema = new Schema(
 
 const addSchema = Joi.object({
   name: Joi.string().required(),
-  url: Joi.string(),
 });
 
 // const updateSchema = Joi.object({
@@ -38,21 +37,19 @@ const addSchema = Joi.object({
 //     .required(),
 // });
 
-// const moveTaskSchema = Joi.object({
-//   column: Joi.string()
-//     .regex(/^[0-9a-fA-F]{24}$/)
-//     .required(),
-//   newOrder: Joi.number(),
-// });
+const addCategorySchema = Joi.object({
+  categoryId: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    .required(),
+});
 
-const countrySchemas = {
+const Schemas = {
   addSchema,
-  // updateSchema,
-  // moveTaskSchema,
+  addCategorySchema,
 };
 
 countrySchema.post("save", HandleMongooseError);
 
 const Country = model("country", countrySchema);
 
-module.exports = { Country, countrySchemas };
+module.exports = { Country, Schemas };

@@ -3,6 +3,9 @@ const { HttpError, ctrlWrapper } = require("../helpers");
 const cloudinary = require("cloudinary").v2;
 
 const addPicture = async (req, res) => {
+  if (!req.file) {
+    throw HttpError(400, "No attached file");
+  }
   const result = await cloudinary.uploader.upload(req.file.path, {
     folder: "pictures",
     resource_type: "image",

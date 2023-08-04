@@ -1,18 +1,28 @@
 const express = require("express");
-const { validateBody, authenticate, upload } = require("../../middlewares");
-const { countrySchemas } = require("../../models/country");
+const {
+  validateFormData,
+  authenticate,
+  upload,
+  validateBody,
+} = require("../../middlewares");
+const { Schemas } = require("../../models/country");
 const ctrl = require("../../controllers/countries");
 const router = express.Router();
-
-/** дописать  authenticate*/
 
 router.post(
   "/",
   authenticate,
   upload.single("file"),
-  validateBody(countrySchemas.addSchema),
+  validateFormData(Schemas.addSchema),
   ctrl.addCountry
 );
 router.get("/", ctrl.getAllCountries);
+
+router.patch(
+  "/:countryId",
+  authenticate,
+  validateBody(Schemas.addCategorySchema),
+  ctrl.addCategory
+);
 
 module.exports = router;
