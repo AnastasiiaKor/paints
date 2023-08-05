@@ -18,11 +18,22 @@ router.post(
 );
 router.get("/", ctrl.getAllCountries);
 
-router.patch(
-  "/:countryId",
+router.get("/:countryId", ctrl.getById);
+
+router.post(
+  "/:countryId/categories",
   authenticate,
   validateBody(Schemas.addCategorySchema),
   ctrl.addCategory
 );
+
+router.put(
+  "/:countryId",
+  authenticate,
+  upload.single("file"),
+  ctrl.updateCountry
+);
+
+router.delete("/:countryId", authenticate, ctrl.deleteCountry);
 
 module.exports = router;

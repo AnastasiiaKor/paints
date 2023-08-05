@@ -13,5 +13,15 @@ router.post(
 );
 
 router.get("/", ctrl.getAllSubcategories);
+router.get("/:subcategoryId", ctrl.getById);
+
+router.put(
+  "/:subcategoryId",
+  authenticate,
+  upload.single("file"),
+  ctrl.updateSubcategory
+);
+
+router.delete("/:subcategoryId", authenticate, ctrl.deleteSubcategory);
 
 module.exports = router;

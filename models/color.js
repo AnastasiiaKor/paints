@@ -2,7 +2,7 @@ const { Schema, model } = require("mongoose");
 const { HandleMongooseError } = require("../helpers");
 const Joi = require("joi");
 
-const categorySchema = new Schema(
+const colorSchema = new Schema(
   {
     name: {
       type: String,
@@ -12,7 +12,6 @@ const categorySchema = new Schema(
       type: String,
       required: [true, "Url is required"],
     },
-    subcategories: [{ type: Schema.Types.ObjectId, ref: "subcategory" }],
   },
   { versionKey: false, timestamps: false }
 );
@@ -21,19 +20,12 @@ const addSchema = Joi.object({
   name: Joi.string().required(),
 });
 
-const addSubSchema = Joi.object({
-  subcategoryId: Joi.string()
-    .regex(/^[0-9a-fA-F]{24}$/)
-    .required(),
-});
-
 const schemas = {
   addSchema,
-  addSubSchema,
 };
 
-categorySchema.post("save", HandleMongooseError);
+colorSchema.post("save", HandleMongooseError);
 
-const Category = model("category", categorySchema);
+const Color = model("color", colorSchema);
 
-module.exports = { Category, schemas };
+module.exports = { Color, schemas };

@@ -44,8 +44,59 @@ const addCategory = async (req, res) => {
   res.status(200).json(country);
 };
 
+const deleteCountry = async (req, res) => {
+  const { countryId } = req.params;
+  const result = await Country.findByIdAndDelete(countryId);
+  if (!result) {
+    throw HttpError(404, "Country not found");
+  }
+
+  res.status(200).json({ message: "Country deleted" });
+};
+
+const updateCountry = async (req, res) => {
+  const { countryId } = req.params;
+  const country = await Country.findById(countryId);
+  if (!country) {
+    throw HttpError(404, "Country not found");
+  }
+  const { name } = req.body;
+  let newUrl;
+  if (req.file) {
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: "files",
+      resource_type: "image",
+      public_id: req.file.originalname,
+    });
+    newUrl = result.secure_url;
+  }
+  const updatedCountry = await Country.findByIdAndUpdate(
+    countryId,
+    {
+      name: name || country.name,
+      url: newUrl || country.url,
+    },
+    { new: true }
+  );
+
+  res.status(200).json(updatedCountry);
+};
+
+const getById = async (req, res) => {
+  const { countryId } = req.params;
+  const country = await Country.findById(countryId).populate("categories");
+  if (!country) {
+    throw HttpError(404, "Country not found");
+  }
+
+  res.status(200).json(country);
+};
+
 module.exports = {
   addCountry: ctrlWrapper(addCountry),
   getAllCountries: ctrlWrapper(getAllCountries),
   addCategory: ctrlWrapper(addCategory),
+  getById: ctrlWrapper(getById),
+  deleteCountry: ctrlWrapper(deleteCountry),
+  updateCountry: ctrlWrapper(updateCountry),
 };
