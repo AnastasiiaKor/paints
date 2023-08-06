@@ -27,7 +27,7 @@ const getById = async (req, res) => {
   const { subcategoryId } = req.params;
   const subcategory = await Subcategory.findById(subcategoryId);
   if (!subcategory) {
-    throw HttpError(404, "Category not found");
+    throw HttpError(404, "Subcategory not found");
   }
 
   res.status(200).json(subcategory);
@@ -47,7 +47,7 @@ const updateSubcategory = async (req, res) => {
   const { subcategoryId } = req.params;
   const subcategory = await Subcategory.findById(subcategoryId);
   if (!subcategory) {
-    throw HttpError(404, "Сategory not found");
+    throw HttpError(404, "Subcategory not found");
   }
   const { name } = req.body;
   let newUrl;

@@ -7,6 +7,7 @@ const colorSchema = new Schema(
     name: {
       type: String,
       required: [true, "Name is required"],
+      unique: [true, "Already existed"],
     },
     url: {
       type: String,

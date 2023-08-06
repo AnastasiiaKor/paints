@@ -7,12 +7,12 @@ const subcategorySchema = new Schema(
     name: {
       type: String,
       required: [true, "Name is required"],
+      unique: [true, "Already existed"],
     },
     url: {
       type: String,
       required: [true, "Url is required"],
     },
-    colors: [{ type: Schema.Types.ObjectId, ref: "color" }],
   },
   { versionKey: false, timestamps: false }
 );
