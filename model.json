@@ -1,0 +1,29 @@
+{
+  "products": [
+    {
+      "url": "hfjkdkdjdd",
+      "date": "22.07.2075",
+      "productId": "7474393hfnfdjfd",
+      "price": 400,
+      "name": "whatever"
+    },
+    {
+      "url": "hfjkdkdjdd",
+      "date": "22.07.2075",
+      "productId": "7474393hfnfdjfd",
+      "price": 400,
+      "name": "whatever"
+    }
+  ],
+  "quantity": [
+    { "productId": "7474393hfnfdjfd", "productQuantity": 50 },
+    { "productId": "7474393hdhjdfdjfd", "productQuantity": 100 }
+  ],
+  "totalPrice": 900,
+  "buyer": {
+    "name": "John",
+    "phone": "678363529",
+    "address": "Ukraine, bal blabla",
+    "email": "w@mail.com"
+  }
+}

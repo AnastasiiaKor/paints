@@ -7,6 +7,7 @@ const galleryRouter = require("./routes/api/pictures");
 const categoryRouter = require("./routes/api/categories");
 const subcategoryRouter = require("./routes/api/subcategories");
 const colorRouter = require("./routes/api/colors");
+const orderRouter = require("./routes/api/orders");
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/gallery", galleryRouter);
 app.use("/categories", categoryRouter);
 app.use("/subcategories", subcategoryRouter);
 app.use("/colors", colorRouter);
+app.use("/orders", orderRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });

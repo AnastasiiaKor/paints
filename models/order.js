@@ -1,0 +1,111 @@
+const { Schema, model } = require("mongoose");
+const { HandleMongooseError } = require("../helpers");
+const Joi = require("joi");
+const { boolean } = require("joi");
+
+const productSchema = new Schema({
+  url: {
+    type: String,
+    required: true,
+  },
+  date: {
+    type: String,
+    required: true,
+  },
+  productId: {
+    type: String,
+    required: true,
+  },
+  price: {
+    type: Number,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+});
+
+const quantitySchema = new Schema({
+  productId: {
+    type: String,
+    required: true,
+  },
+  productQuantity: {
+    type: Number,
+    required: true,
+  },
+});
+
+const buyerSchema = new Schema({
+  name: {
+    type: String,
+    required: true,
+  },
+  phone: {
+    type: String,
+    required: true,
+  },
+  address: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+});
+
+const orderSchema = new Schema(
+  {
+    products: [productSchema],
+    quantity: [quantitySchema],
+    totalPrice: {
+      type: Number,
+      required: true,
+    },
+    buyer: buyerSchema,
+    done: {
+      type: Boolean,
+      default: false,
+    },
+  },
+  { versionKey: false, timestamps: false }
+);
+
+const joiProductSchema = Joi.object({
+  url: Joi.string().required(),
+  date: Joi.string().required(),
+  productId: Joi.string().required(),
+  price: Joi.number().required(),
+  name: Joi.string().required(),
+});
+
+const joiQuantitySchema = Joi.object({
+  productId: Joi.string().required(),
+  productQuantity: Joi.number().required(),
+});
+
+const joiBuyerSchema = Joi.object({
+  name: Joi.string().required(),
+  phone: Joi.string().required(),
+  address: Joi.string().required(),
+  email: Joi.string().email().required(),
+});
+
+const addOrderSchema = Joi.object({
+  products: Joi.array().items(joiProductSchema).required(),
+  quantity: Joi.array().items(joiQuantitySchema).required(),
+  totalPrice: Joi.number().required(),
+  buyer: joiBuyerSchema.required(),
+});
+
+const Schemas = {
+  addOrderSchema,
+};
+
+orderSchema.post("save", HandleMongooseError);
+
+const Order = model("order", orderSchema);
+
+module.exports = { Order, Schemas };
