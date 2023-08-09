@@ -20,13 +20,6 @@ router.get("/", ctrl.getAllCountries);
 
 router.get("/:countryId", ctrl.getById);
 
-router.post(
-  "/:countryId/categories",
-  authenticate,
-  validateBody(Schemas.addCategorySchema),
-  ctrl.addCategory
-);
-
 router.put(
   "/:countryId",
   authenticate,

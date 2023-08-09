@@ -1,5 +1,4 @@
 const { Country } = require("../models/country");
-const { Category } = require("../models/category");
 const { HttpError, ctrlWrapper } = require("../helpers");
 const cloudinary = require("cloudinary").v2;
 
@@ -20,28 +19,8 @@ const addCountry = async (req, res) => {
 };
 
 const getAllCountries = async (req, res) => {
-  const countries = await Country.find().populate("categories");
+  const countries = await Country.find();
   res.status(201).json(countries);
-};
-
-const addCategory = async (req, res) => {
-  const { countryId } = req.params;
-  const { categoryId } = req.body;
-  const country = await Country.findById(countryId).populate("categories");
-  const category = await Category.findById(categoryId);
-  if (!country || !category) {
-    throw HttpError(404, "Not found");
-  }
-  const result = country.categories.find(
-    (category) => category.id === categoryId
-  );
-  if (result) {
-    throw HttpError(400, "Category is already added");
-  }
-  country.categories.push(category);
-  await country.save();
-
-  res.status(200).json(country);
 };
 
 const deleteCountry = async (req, res) => {
@@ -95,7 +74,6 @@ const getById = async (req, res) => {
 module.exports = {
   addCountry: ctrlWrapper(addCountry),
   getAllCountries: ctrlWrapper(getAllCountries),
-  addCategory: ctrlWrapper(addCategory),
   getById: ctrlWrapper(getById),
   deleteCountry: ctrlWrapper(deleteCountry),
   updateCountry: ctrlWrapper(updateCountry),

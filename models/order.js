@@ -4,7 +4,7 @@ const Joi = require("joi");
 const { boolean } = require("joi");
 
 const productSchema = new Schema({
-  url: {
+  brand: {
     type: String,
     required: true,
   },
@@ -13,7 +13,8 @@ const productSchema = new Schema({
     required: true,
   },
   productId: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: "product",
     required: true,
   },
   price: {
@@ -74,11 +75,12 @@ const orderSchema = new Schema(
 );
 
 const joiProductSchema = Joi.object({
-  url: Joi.string().required(),
+  brand: Joi.string().required(),
   date: Joi.string().required(),
   productId: Joi.string().required(),
   price: Joi.number().required(),
   name: Joi.string().required(),
+  color: Joi.string().required(),
 });
 
 const joiQuantitySchema = Joi.object({

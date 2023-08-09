@@ -13,12 +13,6 @@ const countrySchema = new Schema(
       type: String,
       required: [true, "Url is required"],
     },
-    categories: [
-      {
-        type: Schema.Types.ObjectId,
-        ref: "category",
-      },
-    ],
   },
   { versionKey: false, timestamps: false }
 );
@@ -27,15 +21,8 @@ const addSchema = Joi.object({
   name: Joi.string().required(),
 });
 
-const addCategorySchema = Joi.object({
-  categoryId: Joi.string()
-    .regex(/^[0-9a-fA-F]{24}$/)
-    .required(),
-});
-
 const Schemas = {
   addSchema,
-  addCategorySchema,
 };
 
 countrySchema.post("save", HandleMongooseError);

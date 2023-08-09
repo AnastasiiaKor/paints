@@ -1,5 +1,4 @@
 const { Category } = require("../models/category");
-const { Subcategory } = require("../models/subcategory");
 const { HttpError, ctrlWrapper } = require("../helpers");
 const cloudinary = require("cloudinary").v2;
 
@@ -20,7 +19,7 @@ const addCategory = async (req, res) => {
 };
 
 const getAllCategories = async (req, res) => {
-  const categories = await Category.find().populate("subcategories");
+  const categories = await Category.find();
   res.status(200).json(categories);
 };
 
@@ -62,33 +61,9 @@ const updateCategory = async (req, res) => {
   res.status(200).json(updatedCategory);
 };
 
-const addSubcategory = async (req, res) => {
-  const { categoryId } = req.params;
-  const { subcategoryId } = req.body;
-  const category = await Category.findById(categoryId).populate(
-    "subcategories"
-  );
-  const subcategory = await Subcategory.findById(subcategoryId);
-  if (!category || !subcategory) {
-    throw HttpError(404, "Not found");
-  }
-  const result = category.subcategories.find(
-    (subcategory) => subcategory.id === subcategoryId
-  );
-  if (result) {
-    throw HttpError(400, "Subcategory is already added");
-  }
-  category.subcategories.push(subcategory);
-  await category.save();
-
-  res.status(200).json(category);
-};
-
 const getById = async (req, res) => {
   const { categoryId } = req.params;
-  const category = await Category.findById(categoryId).populate(
-    "subcategories"
-  );
+  const category = await Category.findById(categoryId);
   if (!category) {
     throw HttpError(404, "Category not found");
   }
@@ -102,5 +77,4 @@ module.exports = {
   getById: ctrlWrapper(getById),
   deleteCategory: ctrlWrapper(deleteCategory),
   updateCategory: ctrlWrapper(updateCategory),
-  addSubcategory: ctrlWrapper(addSubcategory),
 };

@@ -13,7 +13,6 @@ const categorySchema = new Schema(
       type: String,
       required: [true, "Url is required"],
     },
-    subcategories: [{ type: Schema.Types.ObjectId, ref: "subcategory" }],
   },
   { versionKey: false, timestamps: false }
 );
@@ -22,15 +21,8 @@ const addSchema = Joi.object({
   name: Joi.string().required(),
 });
 
-const addSubSchema = Joi.object({
-  subcategoryId: Joi.string()
-    .regex(/^[0-9a-fA-F]{24}$/)
-    .required(),
-});
-
 const schemas = {
   addSchema,
-  addSubSchema,
 };
 
 categorySchema.post("save", HandleMongooseError);

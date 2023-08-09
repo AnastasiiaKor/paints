@@ -29,11 +29,4 @@ router.put(
 
 router.delete("/:categoryId", authenticate, ctrl.deleteCategory);
 
-router.post(
-  "/:categoryId/subcategories",
-  authenticate,
-  validateBody(schemas.addSubSchema),
-  ctrl.addSubcategory
-);
-
 module.exports = router;

@@ -27,13 +27,6 @@ router.put(
   ctrl.updateSubcategory
 );
 
-router.post(
-  "/:subcategoryId/colors",
-  authenticate,
-  validateBody(schemas.addColorSchema),
-  ctrl.addColor
-);
-
 router.delete("/:subcategoryId", authenticate, ctrl.deleteSubcategory);
 
 module.exports = router;

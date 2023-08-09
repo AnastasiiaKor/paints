@@ -1,5 +1,4 @@
 const { Subcategory } = require("../models/subcategory");
-const { Color } = require("../models/color");
 const { HttpError, ctrlWrapper } = require("../helpers");
 const cloudinary = require("cloudinary").v2;
 
@@ -76,33 +75,10 @@ const updateSubcategory = async (req, res) => {
   res.status(200).json(updatedSubcategory);
 };
 
-const addColor = async (req, res) => {
-  const { subcategoryId } = req.params;
-  const { colorId } = req.body;
-  const subcategory = await Subcategory.findById(subcategoryId).populate(
-    "colors"
-  );
-  const color = await Color.findById(colorId);
-  if (!color || !subcategory) {
-    throw HttpError(404, "Not found");
-  }
-  const result = subcategory.colors.find(
-    (subcategory) => subcategory.id === subcategoryId
-  );
-  if (result) {
-    throw HttpError(400, "Color is already added");
-  }
-  subcategory.colors.push(color);
-  await subcategory.save();
-
-  res.status(200).json(subcategory);
-};
-
 module.exports = {
   addSubcategory: ctrlWrapper(addSubcategory),
   getAllSubcategories: ctrlWrapper(getAllSubcategories),
   deleteSubcategory: ctrlWrapper(deleteSubcategory),
   getById: ctrlWrapper(getById),
   updateSubcategory: ctrlWrapper(updateSubcategory),
-  addColor: ctrlWrapper(addColor),
 };
