@@ -1,7 +1,6 @@
 const { Schema, model } = require("mongoose");
 const { HandleMongooseError } = require("../helpers");
 const Joi = require("joi");
-const { boolean } = require("joi");
 
 const productSchema = new Schema({
   brand: {
@@ -23,6 +22,11 @@ const productSchema = new Schema({
   },
   name: {
     type: String,
+    required: true,
+  },
+  color: {
+    type: Schema.Types.ObjectId,
+    ref: "color",
     required: true,
   },
 });
