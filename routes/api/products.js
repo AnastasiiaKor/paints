@@ -18,6 +18,7 @@ router.post(
 );
 
 router.get("/", ctrl.getProducts);
+router.get("/all", ctrl.getAll);
 
 router.get("/:productId", ctrl.getById);
 

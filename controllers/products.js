@@ -1,4 +1,5 @@
 const { Product } = require("../models/product");
+const { Country } = require("../models/country");
 const { Category } = require("../models/category");
 const { Subcategory } = require("../models/subcategory");
 const { Color } = require("../models/color");
@@ -22,7 +23,14 @@ const getProducts = async (req, res) => {
   const { country, category, subcategory, color } = req.query;
   let result;
   if (!country && !category && !subcategory && !color) {
-    result = await Product.find();
+    const products = await Product.find();
+    const uniqueCountries = [
+      ...new Set(products.map((product) => product.country.toString())),
+    ];
+    const countryItems = await Country.find({
+      _id: { $in: uniqueCountries },
+    });
+    result = countryItems;
   } else if (country && !category && !subcategory && !color) {
     const products = await Product.find({ country });
     const uniqueCategories = [
@@ -62,6 +70,11 @@ const getProducts = async (req, res) => {
   res.status(200).json(result);
 };
 
+const getAll = async (req, res) => {
+  const products = await Product.find();
+  res.status(200).json(products);
+};
+
 const getById = async (req, res) => {
   const { productId } = req.params;
   const product = await Product.findById(productId);
@@ -84,6 +97,7 @@ const deleteProduct = async (req, res) => {
 module.exports = {
   addProduct: ctrlWrapper(addProduct),
   getProducts: ctrlWrapper(getProducts),
+  getAll: ctrlWrapper(getAll),
   getById: ctrlWrapper(getById),
   deleteProduct: ctrlWrapper(deleteProduct),
 };
