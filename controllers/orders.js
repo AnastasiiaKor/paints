@@ -16,12 +16,13 @@ const getAllOrders = async (req, res) => {
   if (done !== undefined) {
     query.done = done === "true";
   }
+  const totalOrdersCount = await Order.countDocuments(query);
 
   const orders = await Order.find(query)
     .skip(parseInt(skip))
     .limit(parseInt(limit));
 
-  res.status(200).json(orders);
+  res.status(200).json({ total: totalOrdersCount, orders: orders });
 };
 
 const deleteOrder = async (req, res) => {

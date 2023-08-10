@@ -71,13 +71,27 @@ const getProducts = async (req, res) => {
 };
 
 const getAll = async (req, res) => {
-  const products = await Product.find();
-  res.status(200).json(products);
+  const { page = 1, limit = 10, done } = req.query;
+  const skip = (page - 1) * limit;
+  const totalProductsCount = await Product.countDocuments();
+  const products = await Product.find()
+    .populate("category", "name")
+    .populate("subcategory", "name")
+    .populate("country", "name")
+    .populate("color", "name")
+    .skip(parseInt(skip))
+    .limit(parseInt(limit));
+
+  res.status(200).json({ total: totalProductsCount, products: products });
 };
 
 const getById = async (req, res) => {
   const { productId } = req.params;
-  const product = await Product.findById(productId);
+  const product = await Product.findById(productId)
+    .populate("category", "name")
+    .populate("subcategory", "name")
+    .populate("country", "name")
+    .populate("color", "name");
   if (!product) {
     throw HttpError(404, "Product not found");
   }
@@ -106,7 +120,11 @@ const updateProduct = async (req, res) => {
       url: newUrl || product.url,
     },
     { new: true }
-  );
+  )
+    .populate("category", "name")
+    .populate("subcategory", "name")
+    .populate("country", "name")
+    .populate("color", "name");
 
   res.status(200).json(updatedProduct);
 };
