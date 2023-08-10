@@ -71,12 +71,34 @@ const getProducts = async (req, res) => {
 };
 
 const getAll = async (req, res) => {
-  const totalProductsCount = await Product.countDocuments();
-  const products = await Product.find()
+  const {
+    page = 1,
+    limit = 10,
+    country,
+    category,
+    subcategory,
+    color,
+    minPrice,
+    maxPrice,
+  } = req.query;
+  const skip = (page - 1) * limit;
+
+  let query = {};
+
+  if (country) query.country = country;
+  if (category) query.category = category;
+  if (subcategory) query.subcategory = subcategory;
+  if (color) query.color = color;
+  if (minPrice && maxPrice) query.price = { $gte: minPrice, $lte: maxPrice };
+
+  const totalProductsCount = await Product.countDocuments(query);
+  const products = await Product.find(query)
     .populate("category", "name")
     .populate("subcategory", "name")
     .populate("country", "name")
-    .populate("color", "name");
+    .populate("color", "name")
+    .skip(parseInt(skip))
+    .limit(parseInt(limit));
 
   res.status(200).json({ total: totalProductsCount, products: products });
 };

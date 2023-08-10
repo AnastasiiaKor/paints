@@ -14,6 +14,5 @@ router.put(
   validateBody(schemas.updateSchema),
   ctrl.update
 );
-// router.post("/upload", upload.single("image"), ctrl.uploadAvatar);
 
 module.exports = router;
