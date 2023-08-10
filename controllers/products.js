@@ -71,16 +71,12 @@ const getProducts = async (req, res) => {
 };
 
 const getAll = async (req, res) => {
-  const { page = 1, limit = 10, done } = req.query;
-  const skip = (page - 1) * limit;
   const totalProductsCount = await Product.countDocuments();
   const products = await Product.find()
     .populate("category", "name")
     .populate("subcategory", "name")
     .populate("country", "name")
-    .populate("color", "name")
-    .skip(parseInt(skip))
-    .limit(parseInt(limit));
+    .populate("color", "name");
 
   res.status(200).json({ total: totalProductsCount, products: products });
 };
