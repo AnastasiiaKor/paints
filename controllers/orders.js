@@ -8,7 +8,19 @@ const addOrder = async (req, res) => {
 };
 
 const getAllOrders = async (req, res) => {
-  const orders = await Order.find();
+  const { page = 1, limit = 10, done } = req.query;
+  const skip = (page - 1) * limit;
+
+  let query = {};
+
+  if (done !== undefined) {
+    query.done = done === "true";
+  }
+
+  const orders = await Order.find(query)
+    .skip(parseInt(skip))
+    .limit(parseInt(limit));
+
   res.status(200).json(orders);
 };
 
