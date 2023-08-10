@@ -22,12 +22,12 @@ router.get("/all", ctrl.getAll);
 
 router.get("/:productId", ctrl.getById);
 
-// router.put(
-//   "/:categoryId",
-//   authenticate,
-//   upload.single("file"),
-//   ctrl.updateCategory
-// );
+router.put(
+  "/:productId",
+  authenticate,
+  upload.single("file"),
+  ctrl.updateProduct
+);
 
 router.delete("/:categoryId", authenticate, ctrl.deleteProduct);
 

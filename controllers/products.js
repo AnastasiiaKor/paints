@@ -84,6 +84,33 @@ const getById = async (req, res) => {
   res.status(200).json(product);
 };
 
+const updateProduct = async (req, res) => {
+  const { productId } = req.params;
+  const product = await Product.findById(productId);
+  if (!product) {
+    throw HttpError(404, "Product not found");
+  }
+  let newUrl;
+  if (req.file) {
+    const result = await cloudinary.uploader.upload(req.file.path, {
+      folder: "files",
+      resource_type: "image",
+      public_id: req.file.originalname,
+    });
+    newUrl = result.secure_url;
+  }
+  const updatedProduct = await Product.findByIdAndUpdate(
+    productId,
+    {
+      ...(req.body || product),
+      url: newUrl || product.url,
+    },
+    { new: true }
+  );
+
+  res.status(200).json(updatedProduct);
+};
+
 const deleteProduct = async (req, res) => {
   const { productId } = req.params;
   const result = await Product.findByIdAndDelete(productId);
@@ -96,6 +123,7 @@ const deleteProduct = async (req, res) => {
 
 module.exports = {
   addProduct: ctrlWrapper(addProduct),
+  updateProduct: ctrlWrapper(updateProduct),
   getProducts: ctrlWrapper(getProducts),
   getAll: ctrlWrapper(getAll),
   getById: ctrlWrapper(getById),
