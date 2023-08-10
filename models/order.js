@@ -25,8 +25,7 @@ const productSchema = new Schema({
     required: true,
   },
   color: {
-    type: Schema.Types.ObjectId,
-    ref: "color",
+    type: String,
     required: true,
   },
 });
@@ -106,8 +105,13 @@ const addOrderSchema = Joi.object({
   buyer: joiBuyerSchema.required(),
 });
 
+const statusSchema = Joi.object({
+  done: Joi.boolean().required(),
+});
+
 const Schemas = {
   addOrderSchema,
+  statusSchema,
 };
 
 orderSchema.post("save", HandleMongooseError);
