@@ -19,15 +19,13 @@ const addSubcategory = async (req, res) => {
 };
 
 const getAllSubcategories = async (req, res) => {
-  const subcategories = await Subcategory.find().populate("colors");
+  const subcategories = await Subcategory.find();
   res.status(200).json(subcategories);
 };
 
 const getById = async (req, res) => {
   const { subcategoryId } = req.params;
-  const subcategory = await Subcategory.findById(subcategoryId).populate(
-    "colors"
-  );
+  const subcategory = await Subcategory.findById(subcategoryId);
   if (!subcategory) {
     throw HttpError(404, "Subcategory not found");
   }
@@ -47,9 +45,7 @@ const deleteSubcategory = async (req, res) => {
 
 const updateSubcategory = async (req, res) => {
   const { subcategoryId } = req.params;
-  const subcategory = await Subcategory.findById(subcategoryId).populate(
-    "colors"
-  );
+  const subcategory = await Subcategory.findById(subcategoryId);
   if (!subcategory) {
     throw HttpError(404, "Subcategory not found");
   }
