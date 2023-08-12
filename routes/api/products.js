@@ -22,13 +22,13 @@ router.get("/all", ctrl.getAll);
 
 router.get("/:productId", ctrl.getById);
 
-router.put(
-  "/:productId",
-  authenticate,
-  upload.single("file"),
-  ctrl.updateProduct
-);
+// router.put(
+//   "/:productId",
+//   authenticate,
+//   upload.array("file"),
+//   ctrl.updateProduct
+// );
 
-router.delete("/:categoryId", authenticate, ctrl.deleteProduct);
+router.delete("/:productId", authenticate, ctrl.deleteProduct);
 
 module.exports = router;

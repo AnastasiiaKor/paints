@@ -13,6 +13,10 @@ const productSchema = new Schema(
       type: String,
       required: [true, "Url is required"],
     },
+    pdf: {
+      type: String,
+      default: null,
+    },
     price: {
       type: Number,
       required: true,
