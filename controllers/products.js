@@ -14,6 +14,8 @@ const addProduct = async (req, res) => {
   });
   const productUrl = result.secure_url;
 
+  const product = await Product.create({ ...req.body, url: productUrl });
+
   res.status(201).json(product);
 };
 
