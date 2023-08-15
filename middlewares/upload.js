@@ -8,11 +8,18 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// const storage = new CloudinaryStorage({
+//   cloudinary: cloudinary,
+//   allowedFormats: ["jpg", "png", "gif"],
+//   filename: (req, file, cb) => {
+//     cb(null, file.originalname);
+//   },
+// });
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   allowedFormats: ["jpg", "png", "gif", "pdf"],
-  filename: (req, file, cb) => {
-    cb(null, file.originalname);
+  params: {
+    folder: "files",
   },
 });
 

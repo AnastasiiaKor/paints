@@ -1,10 +1,5 @@
 const express = require("express");
-const {
-  validateFormData,
-  authenticate,
-  upload,
-  validateBody,
-} = require("../../middlewares");
+const { authenticate, upload, validateFields } = require("../../middlewares");
 const { schemas } = require("../../models/product");
 const ctrl = require("../../controllers/products");
 const router = express.Router();
@@ -12,8 +7,11 @@ const router = express.Router();
 router.post(
   "/",
   authenticate,
-  upload.single("file"),
-  validateFormData(schemas.addProductSchema),
+  upload.fields([
+    { name: "file", maxCount: 1 },
+    { name: "pdf", maxCount: 1 },
+  ]),
+  validateFields(schemas.addProductSchema),
   ctrl.addProduct
 );
 

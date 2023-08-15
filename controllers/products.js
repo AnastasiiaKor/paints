@@ -1,28 +1,40 @@
 const { Product } = require("../models/product");
-const { Country } = require("../models/country");
 const { Category } = require("../models/category");
-const { Subcategory } = require("../models/subcategory");
-const { Color } = require("../models/color");
 const { HttpError, ctrlWrapper } = require("../helpers");
 const cloudinary = require("cloudinary").v2;
 
 const addProduct = async (req, res) => {
-  const result = await cloudinary.uploader.upload(req.file.path, {
-    folder: "files",
-    resource_type: "image",
-    public_id: req.file.originalname,
-  });
-  const productUrl = result.secure_url;
+  // console.log(req.files["file"][0]);
+  console.log(req.files["pdf"][0]);
+  // const imageUrl = await cloudinary.uploader.upload(req.file.path, {
+  //   folder: "files",
+  //   resource_type: "image",
+  //   public_id: req.file.originalname,
+  // }).secure_url;
 
-  const product = await Product.create({ ...req.body, url: productUrl });
+  // const pdfUrl = req.file
+  //   ? (
+  //       await cloudinary.uploader.uploadPdf(req.file.path, {
+  //         folder: "paints_pdf",
+  //         resource_type: "raw",
+  //         public_id: req.file.originalname,
+  //       })
+  //     ).secure_url
+  //   : null;
 
-  res.status(201).json(product);
+  // const product = await Product.create({
+  //   ...req.body,
+  //   url: imageUrl,
+  //   pdf: pdfUrl,
+  // });
+
+  res.status(201).json("cool");
 };
 
 const getProducts = async (req, res) => {
-  const { country, category, subcategory, color } = req.query;
+  const { country, category, color } = req.query;
   let result;
-  if (!country && !category && !subcategory && !color) {
+  if (!country && !category && !color) {
     const products = await Product.find();
     const uniqueCountries = [
       ...new Set(products.map((product) => product.country.toString())),
@@ -76,8 +88,8 @@ const getAll = async (req, res) => {
     limit = 10,
     country,
     category,
-    subcategory,
     color,
+    name,
     minPrice,
     maxPrice,
   } = req.query;
@@ -87,16 +99,13 @@ const getAll = async (req, res) => {
 
   if (country) query.country = country;
   if (category) query.category = category;
-  if (subcategory) query.subcategory = subcategory;
+  if (name) query.name = name;
   if (color) query.color = color;
   if (minPrice && maxPrice) query.price = { $gte: minPrice, $lte: maxPrice };
 
   const totalProductsCount = await Product.countDocuments(query);
   const products = await Product.find(query)
     .populate("category", "name")
-    .populate("subcategory", "name")
-    .populate("country", "name")
-    .populate("color", "name")
     .skip(parseInt(skip))
     .limit(parseInt(limit));
 
@@ -105,11 +114,10 @@ const getAll = async (req, res) => {
 
 const getById = async (req, res) => {
   const { productId } = req.params;
-  const product = await Product.findById(productId)
-    .populate("category", "name")
-    .populate("subcategory", "name")
-    .populate("country", "name")
-    .populate("color", "name");
+  const product = await Product.findById(productId).populate(
+    "category",
+    "name"
+  );
   if (!product) {
     throw HttpError(404, "Product not found");
   }

@@ -13,9 +13,9 @@ const productSchema = new Schema(
       type: String,
       required: [true, "Url is required"],
     },
-    pdf: {
+    pdfUrl: {
       type: String,
-      default: null,
+      required: true,
     },
     price: {
       type: Number,
@@ -42,19 +42,13 @@ const productSchema = new Schema(
       ref: "category",
       required: true,
     },
-    subcategory: {
-      type: Schema.Types.ObjectId,
-      ref: "subcategory",
-      required: true,
-    },
+
     country: {
-      type: Schema.Types.ObjectId,
-      ref: "country",
+      type: String,
       required: true,
     },
     color: {
-      type: Schema.Types.ObjectId,
-      ref: "color",
+      type: String,
       required: true,
     },
   },
@@ -71,15 +65,8 @@ const addProductSchema = Joi.object({
   category: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required(),
-  subcategory: Joi.string()
-    .regex(/^[0-9a-fA-F]{24}$/)
-    .required(),
-  country: Joi.string()
-    .regex(/^[0-9a-fA-F]{24}$/)
-    .required(),
-  color: Joi.string()
-    .regex(/^[0-9a-fA-F]{24}$/)
-    .required(),
+  country: Joi.string().required(),
+  color: Joi.string().required(),
 });
 
 const schemas = {
