@@ -4,47 +4,24 @@ const { HttpError, ctrlWrapper } = require("../helpers");
 const cloudinary = require("cloudinary").v2;
 
 const addProduct = async (req, res) => {
-  // console.log(req.files["file"][0]);
-  console.log(req.files["pdf"][0]);
-  // const imageUrl = await cloudinary.uploader.upload(req.file.path, {
-  //   folder: "files",
-  //   resource_type: "image",
-  //   public_id: req.file.originalname,
-  // }).secure_url;
+  const file = req.files["file"][0].path;
+  const pdf = req.files["pdf"][0].path;
 
-  // const pdfUrl = req.file
-  //   ? (
-  //       await cloudinary.uploader.uploadPdf(req.file.path, {
-  //         folder: "paints_pdf",
-  //         resource_type: "raw",
-  //         public_id: req.file.originalname,
-  //       })
-  //     ).secure_url
-  //   : null;
+  const product = await Product.create({
+    ...req.body,
+    url: file,
+    pdfUrl: pdf,
+  });
 
-  // const product = await Product.create({
-  //   ...req.body,
-  //   url: imageUrl,
-  //   pdf: pdfUrl,
-  // });
-
-  res.status(201).json("cool");
+  res.status(201).json(product);
 };
 
 const getProducts = async (req, res) => {
   const { country, category, color } = req.query;
   let result;
+  let query = {};
   if (!country && !category && !color) {
     const products = await Product.find();
-    const uniqueCountries = [
-      ...new Set(products.map((product) => product.country.toString())),
-    ];
-    const countryItems = await Country.find({
-      _id: { $in: uniqueCountries },
-    });
-    result = countryItems;
-  } else if (country && !category && !subcategory && !color) {
-    const products = await Product.find({ country });
     const uniqueCategories = [
       ...new Set(products.map((product) => product.category.toString())),
     ];
@@ -52,33 +29,37 @@ const getProducts = async (req, res) => {
       _id: { $in: uniqueCategories },
     });
     result = categoryItems;
-  } else if (country && category && !subcategory && !color) {
-    const products = await Product.find({ country, category });
-    const uniqueSubcategories = [
-      ...new Set(products.map((product) => product.subcategory.toString())),
+  } else if (!country && category && !color) {
+    const products = await Product.find({ category }).populate(
+      "category",
+      "name"
+    );
+    const uniqueCountries = [
+      ...new Set(products.map((product) => product.country)),
     ];
-    const subcategoryItems = await Subcategory.find({
-      _id: { $in: uniqueSubcategories },
-    });
-    result = subcategoryItems;
-  } else if (country && category && subcategory && !color) {
-    const products = await Product.find({ country, category, subcategory });
-    const uniqueColors = [
-      ...new Set(products.map((product) => product.color.toString())),
-    ];
-    const colorItems = await Color.find({
-      _id: { $in: uniqueColors },
-    });
-    result = colorItems;
-  } else if (country && category && subcategory && color) {
-    const products = await Product.find({
-      country,
-      category,
-      subcategory,
-      color,
-    });
+    const uniqueColors = [...new Set(products.map((product) => product.color))];
+
+    result = {
+      countries: uniqueCountries,
+      colors: uniqueColors,
+      products: products,
+    };
+  } else {
+    if (category) {
+      query.category = category;
+    }
+    if (color) {
+      query.color = color;
+    }
+    if (country) {
+      query.country = country;
+    }
+
+    const products = await Product.find(query).populate("category", "name");
+
     result = products;
   }
+
   res.status(200).json(result);
 };
 
