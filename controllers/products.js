@@ -89,8 +89,26 @@ const getAll = async (req, res) => {
     .populate("category", "name")
     .skip(parseInt(skip))
     .limit(parseInt(limit));
-
-  res.status(200).json({ total: totalProductsCount, products: products });
+  const allProducts = await Product.find();
+  const uniqueCountries = [
+    ...new Set(allProducts.map((product) => product.country)),
+  ];
+  const uniqueColors = [
+    ...new Set(allProducts.map((product) => product.color)),
+  ];
+  const uniqueCategories = [
+    ...new Set(allProducts.map((product) => product.category.toString())),
+  ];
+  const categoryItems = await Category.find({
+    _id: { $in: uniqueCategories },
+  });
+  res.status(200).json({
+    categories: categoryItems,
+    countries: uniqueCountries,
+    colors: uniqueColors,
+    total: totalProductsCount,
+    products: products,
+  });
 };
 
 const getById = async (req, res) => {
