@@ -1,7 +1,7 @@
 const { Product } = require("../models/product");
 const { Category } = require("../models/category");
 const { HttpError, ctrlWrapper } = require("../helpers");
-const cloudinary = require("cloudinary").v2;
+
 
 const addProduct = async (req, res) => {
   const file = req.files["file"][0].path;
@@ -21,7 +21,7 @@ const getProducts = async (req, res) => {
   let result;
   let query = {};
   if (!country && !category && !color) {
-    const products = await Product.find();
+    const products = await Product.find({inStock:true});
     const uniqueCategories = [
       ...new Set(products.map((product) => product.category.toString())),
     ];
@@ -30,7 +30,7 @@ const getProducts = async (req, res) => {
     });
     result = categoryItems;
   } else if (!country && category && !color) {
-    const products = await Product.find({ category }).populate(
+    const products = await Product.find({ category, inStock:true }).populate(
       "category",
       "name"
     );
@@ -40,6 +40,7 @@ const getProducts = async (req, res) => {
     const uniqueColors = [...new Set(products.map((product) => product.color))];
 
     result = {
+      
       countries: uniqueCountries,
       colors: uniqueColors,
       products: products,
@@ -54,6 +55,7 @@ const getProducts = async (req, res) => {
     if (country) {
       query.country = country;
     }
+    query.inStock = true;
 
     const products = await Product.find(query).populate("category", "name");
 
@@ -130,29 +132,38 @@ const updateProduct = async (req, res) => {
     throw HttpError(404, "Product not found");
   }
   let newUrl;
-  if (req.file) {
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      folder: "files",
-      resource_type: "image",
-      public_id: req.file.originalname,
-    });
-    newUrl = result.secure_url;
+  let newPdf
+  if (req.files["file"]) {
+    newUrl=req.files["file"][0].path
   }
+  if (req.files["pdf"]) {
+    newPdf=req.files["pdf"][0].path
+  }
+ 
+  
   const updatedProduct = await Product.findByIdAndUpdate(
     productId,
     {
-      ...(req.body || product),
+     ...req.body,
       url: newUrl || product.url,
+      pdfUrl: newPdf || product.pdfUrl,
     },
     { new: true }
   )
     .populate("category", "name")
-    .populate("subcategory", "name")
-    .populate("country", "name")
-    .populate("color", "name");
+    
 
   res.status(200).json(updatedProduct);
 };
+
+const changeStatus = async(req,res)=>{
+  const { productId } = req.params;
+  const updatedProduct = await Product.findByIdAndUpdate(productId, {...req.body}, {new:true});
+  if (!updatedProduct) {
+    throw HttpError(404, "Product not found");
+  }
+  res.status(200).json(updatedProduct);
+}
 
 const deleteProduct = async (req, res) => {
   const { productId } = req.params;
@@ -171,4 +182,5 @@ module.exports = {
   getAll: ctrlWrapper(getAll),
   getById: ctrlWrapper(getById),
   deleteProduct: ctrlWrapper(deleteProduct),
+  changeStatus: ctrlWrapper(changeStatus)
 };

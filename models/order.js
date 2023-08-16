@@ -50,14 +50,6 @@ const buyerSchema = new Schema({
     type: String,
     required: true,
   },
-  address: {
-    type: String,
-    required: true,
-  },
-  email: {
-    type: String,
-    required: true,
-  },
 });
 
 const orderSchema = new Schema(
@@ -94,8 +86,6 @@ const joiQuantitySchema = Joi.object({
 const joiBuyerSchema = Joi.object({
   name: Joi.string().required(),
   phone: Joi.string().required(),
-  address: Joi.string().required(),
-  email: Joi.string().email().required(),
 });
 
 const addOrderSchema = Joi.object({

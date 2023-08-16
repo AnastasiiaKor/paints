@@ -8,9 +8,9 @@ const adminSchema = new Schema(
       type: String,
       required: [true, "Password is required"],
     },
-    email: {
+    login: {
       type: String,
-      required: [true, "Email is required"],
+      required: [true, "Login is required"],
       unique: true,
     },
     token: {
@@ -22,17 +22,17 @@ const adminSchema = new Schema(
 );
 
 const registerSchema = Joi.object({
-  email: Joi.string().email().required(),
+  login: Joi.string().required(),
   password: Joi.string().min(8).max(64).required(),
 });
 
 const loginSchema = Joi.object({
-  email: Joi.string().email().required(),
+  login: Joi.string().required(),
   password: Joi.string().min(8).max(64).required(),
 });
 
 const updateSchema = Joi.object({
-  email: Joi.string().email(),
+  login: Joi.string(),
   password: Joi.string().min(8).max(64),
 });
 

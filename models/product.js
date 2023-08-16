@@ -9,6 +9,10 @@ const productSchema = new Schema(
       required: [true, "Name is required"],
       unique: [true, "Already existed"],
     },
+    fullName: {
+      type: String,
+      required: true,
+    },
     url: {
       type: String,
       required: [true, "Url is required"],
@@ -37,12 +41,19 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
+    density: {
+      type: Number,
+      required: true,
+    },
+    chemicalFormula: {
+      type: String,
+      required: true,
+    },
     category: {
       type: Schema.Types.ObjectId,
       ref: "category",
       required: true,
     },
-
     country: {
       type: String,
       required: true,
@@ -51,17 +62,29 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
+    type: {
+      type: String,
+      required: true,
+    },
+    inStock: {
+      type: Boolean,
+      default: true,
+    },
   },
   { versionKey: false, timestamps: false }
 );
 
 const addProductSchema = Joi.object({
   name: Joi.string().required(),
+  fullName: Joi.string().required(),
   price: Joi.number().required(),
   description: Joi.string().required(),
   packingType: Joi.string().required(),
   brand: Joi.string().required(),
+  type: Joi.string().required(),
   weight: Joi.number().required(),
+  density: Joi.number().required(),
+  chemicalFormula: Joi.string().required(),
   category: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
     .required(),
@@ -69,8 +92,32 @@ const addProductSchema = Joi.object({
   color: Joi.string().required(),
 });
 
+const updateProductSchema = Joi.object({
+  name: Joi.string(),
+  fullName: Joi.string(),
+  price: Joi.number(),
+  description: Joi.string(),
+  packingType: Joi.string(),
+  brand: Joi.string(),
+  type: Joi.string(),
+  weight: Joi.number(),
+  density: Joi.number(),
+  chemicalFormula: Joi.string(),
+  category: Joi.string()
+    .regex(/^[0-9a-fA-F]{24}$/)
+    ,
+  country: Joi.string(),
+  color: Joi.string(),
+});
+
+const updateStatusSchema=Joi.object({
+  inStock: Joi.boolean().required()
+});
+
 const schemas = {
   addProductSchema,
+  updateProductSchema,
+  updateStatusSchema
 };
 
 productSchema.post("save", HandleMongooseError);

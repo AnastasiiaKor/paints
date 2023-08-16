@@ -5,10 +5,10 @@ const jwt = require("jsonwebtoken");
 const { SECRET_KEY } = process.env;
 
 const register = async (req, res) => {
-  const { email, password } = req.body;
-  const admin = await Admin.findOne({ email });
+  const { login, password } = req.body;
+  const admin = await Admin.findOne({ login });
   if (admin) {
-    throw HttpError(409, "Email in use");
+    throw HttpError(409, "Login in use");
   }
   const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -23,12 +23,12 @@ const register = async (req, res) => {
 };
 
 const login = async (req, res) => {
-  const { email, password } = req.body;
-  const admin = await Admin.findOne({ email });
-  if (!admin) throw HttpError(404, "Wrong email or password");
+  const { login, password } = req.body;
+  const admin = await Admin.findOne({ login });
+  if (!admin) throw HttpError(404, "Wrong login or password");
 
   const check = await bcrypt.compare(password, admin.password);
-  if (!check) throw HttpError(404, "Wrong email or password");
+  if (!check) throw HttpError(404, "Wrong login or password");
 
   const payload = {
     id: admin._id,
@@ -42,9 +42,9 @@ const login = async (req, res) => {
 };
 
 const check = async (req, res) => {
-  const { email } = req.admin;
+  const { login } = req.admin;
   res.status(200).json({
-    email,
+    login,
   });
 };
 
@@ -57,9 +57,9 @@ const logout = async (req, res) => {
 const update = async (req, res) => {
   const { id } = req.admin;
 
-  const { password, email } = req.body;
+  const { password, login } = req.body;
   const admin = await Admin.findById(id);
-  const existingAdmin = await Admin.findOne({ email });
+  const existingAdmin = await Admin.findOne({ login });
   if (existingAdmin) {
     if (id !== existingAdmin.id) {
       throw HttpError(409, "Email in use");
@@ -80,7 +80,7 @@ const update = async (req, res) => {
   );
 
   res.status(200).json({
-    email: updatedAdmin.email,
+    login: updatedAdmin.login,
   });
 };
 

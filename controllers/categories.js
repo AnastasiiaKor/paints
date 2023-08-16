@@ -1,17 +1,11 @@
 const { Category } = require("../models/category");
 const { HttpError, ctrlWrapper } = require("../helpers");
-const cloudinary = require("cloudinary").v2;
+
 
 const addCategory = async (req, res) => {
-  const result = await cloudinary.uploader.upload(req.file.path, {
-    folder: "files",
-    resource_type: "image",
-    public_id: req.file.originalname,
-  });
-  const categoryUrl = result.secure_url;
 
   const category = await Category.create({
-    url: categoryUrl,
+    url: req.file.path,
     name: req.body.name,
   });
 
@@ -42,12 +36,7 @@ const updateCategory = async (req, res) => {
   const { name } = req.body;
   let newUrl;
   if (req.file) {
-    const result = await cloudinary.uploader.upload(req.file.path, {
-      folder: "files",
-      resource_type: "image",
-      public_id: req.file.originalname,
-    });
-    newUrl = result.secure_url;
+    newUrl = req.file.path;
   }
   const updatedCategory = await Category.findByIdAndUpdate(
     categoryId,

@@ -21,8 +21,13 @@ const addSchema = Joi.object({
   name: Joi.string().required(),
 });
 
+const updateSchema = Joi.object({
+  name: Joi.string(),
+});
+
 const schemas = {
   addSchema,
+  updateSchema
 };
 
 categorySchema.post("save", HandleMongooseError);

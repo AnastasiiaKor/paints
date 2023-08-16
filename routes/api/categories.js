@@ -1,5 +1,5 @@
 const express = require("express");
-const { validateFormData, authenticate, upload } = require("../../middlewares");
+const { validateFormData, authenticate, upload, validateBody } = require("../../middlewares");
 const { schemas } = require("../../models/category");
 const ctrl = require("../../controllers/categories");
 const router = express.Router();
@@ -19,6 +19,7 @@ router.put(
   "/:categoryId",
   authenticate,
   upload.single("file"),
+  validateBody(schemas.updateSchema),
   ctrl.updateCategory
 );
 
