@@ -17,6 +17,8 @@ const getAllOrders = async (req, res) => {
     query.done = done === "true";
   }
   const totalAll = await Order.countDocuments();
+  const totalDone = await Order.countDocuments({done:true});
+  const totalUndone = await Order.countDocuments({done:false});
   const totalOrdersCount = await Order.countDocuments(query);
 
   const orders = await Order.find(query)
@@ -25,7 +27,7 @@ const getAllOrders = async (req, res) => {
 
   res
     .status(200)
-    .json({ all: totalAll, total: totalOrdersCount, orders: orders });
+    .json({ all: totalAll, done:totalDone, undone:totalUndone, total: totalOrdersCount, orders: orders });
 };
 
 const deleteOrder = async (req, res) => {
