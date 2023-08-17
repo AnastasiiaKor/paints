@@ -79,7 +79,7 @@ const getAll = async (req, res) => {
   const skip = (page - 1) * limit;
 
   let query = {};
-
+  if (!req.admin) query.inStock=true;
   if (country) query.country = country;
   if (category) query.category = category;
   if (name) query.name = { $regex: name, $options: "i" };

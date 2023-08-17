@@ -1,5 +1,5 @@
 const express = require("express");
-const { authenticate, upload, validateFields, validateBody } = require("../../middlewares");
+const { authenticate, upload, validateFields, validateBody, checkUser } = require("../../middlewares");
 const { schemas } = require("../../models/product");
 const ctrl = require("../../controllers/products");
 const router = express.Router();
@@ -16,7 +16,7 @@ router.post(
 );
 
 router.get("/", ctrl.getProducts);
-router.get("/all", ctrl.getAll);
+router.get("/all", checkUser, ctrl.getAll);
 
 router.get("/:productId", ctrl.getById);
 

@@ -3,6 +3,7 @@ const authenticate = require("./authenticate");
 const validateFormData = require("./validateFormData");
 const upload = require("./upload");
 const validateFields = require("./validateFields");
+const checkUser = require("./checkUser")
 
 module.exports = {
   validateBody,
@@ -10,4 +11,5 @@ module.exports = {
   upload,
   validateFormData,
   validateFields,
+  checkUser
 };
