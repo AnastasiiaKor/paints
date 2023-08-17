@@ -82,7 +82,7 @@ const getAll = async (req, res) => {
 
   if (country) query.country = country;
   if (category) query.category = category;
-  if (name) query.name = name;
+  if (name) query.name = { $regex: name, $options: "i" };
   if (color) query.color = color;
   if (minPrice && maxPrice) query.price = { $gte: minPrice, $lte: maxPrice };
 
@@ -140,7 +140,6 @@ const updateProduct = async (req, res) => {
     newPdf=req.files["pdf"][0].path
   }
  
-  
   const updatedProduct = await Product.findByIdAndUpdate(
     productId,
     {
