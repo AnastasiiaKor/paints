@@ -1,9 +1,8 @@
 const { Category } = require("../models/category");
+const { Product } = require("../models/product");
 const { HttpError, ctrlWrapper } = require("../helpers");
 
-
 const addCategory = async (req, res) => {
-
   const category = await Category.create({
     url: req.file.path,
     name: req.body.name,
@@ -22,6 +21,8 @@ const deleteCategory = async (req, res) => {
   const result = await Category.findByIdAndDelete(categoryId);
   if (!result) {
     throw HttpError(404, "Category not found");
+  } else {
+    await Product.deleteMany({ category: categoryId });
   }
 
   res.status(200).json({ message: "Category deleted" });
