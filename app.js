@@ -12,11 +12,17 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-app.use("/api/admin", adminRouter);
-app.use("/api/gallery", galleryRouter);
-app.use("/api/categories", categoryRouter);
-app.use("/api/orders", orderRouter);
-app.use("/api/products", productRouter);
+// app.use("/api/admin", adminRouter);
+// app.use("/api/gallery", galleryRouter);
+// app.use("/api/categories", categoryRouter);
+// app.use("/api/orders", orderRouter);
+// app.use("/api/products", productRouter);
+
+app.use("/admin", adminRouter);
+app.use("/gallery", galleryRouter);
+app.use("/categories", categoryRouter);
+app.use("/orders", orderRouter);
+app.use("/products", productRouter);
 
 app.use((req, res) => {
   res.status(404).json({ message: "Not found" });
