@@ -34,7 +34,7 @@ const deletePicture = async (req, res) => {
 
 const getAllPictures = async (req, res) => {
   const pictures = await Picture.find();
-  res.status(201).json(pictures);
+  res.status(200).json(pictures);
 };
 
 module.exports = {
