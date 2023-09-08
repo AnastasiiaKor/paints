@@ -67,7 +67,6 @@ const update = async (req, res) => {
 };
 
 module.exports = {
-  register: ctrlWrapper(register),
   login: ctrlWrapper(login),
   check: ctrlWrapper(check),
   logout: ctrlWrapper(logout),
