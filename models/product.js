@@ -41,8 +41,8 @@ const productSchema = new Schema(
       type: String,
       required: true,
     },
-    density: {
-      type: Number,
+    dosage: {
+      type: String,
       required: true,
     },
     chemicalFormula: {
@@ -83,7 +83,7 @@ const addProductSchema = Joi.object({
   brand: Joi.string().required(),
   type: Joi.string().required(),
   weight: Joi.number().required(),
-  density: Joi.number().required(),
+  dosage: Joi.string().required(),
   chemicalFormula: Joi.string().required(),
   category: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
@@ -101,7 +101,7 @@ const updateProductSchema = Joi.object({
   brand: Joi.string(),
   type: Joi.string(),
   weight: Joi.number(),
-  density: Joi.number(),
+  dosage: Joi.string(),
   chemicalFormula: Joi.string(),
   category: Joi.string()
     .regex(/^[0-9a-fA-F]{24}$/)
